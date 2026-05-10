@@ -1,0 +1,32 @@
+{
+  "id": "mem_template_v2",
+  "schemaVersion": "0.2.0",
+  "type": "owner_preference",
+  "scope": "project",
+  "source": "manual",
+  "createdAt": "2026-05-09T00:00:00Z",
+  "updatedAt": "2026-05-09T00:00:00Z",
+  "confidence": "owner_asserted",
+  "status": "proposed",
+  "summary": "Short human-readable summary of the memory.",
+  "evidence": [
+    {
+      "type": "manual_attestation",
+      "reference": "owner_direct_input",
+      "description": "Owner explicitly stated this preference."
+    }
+  ],
+  "tags": ["template", "example"],
+  "expiresAt": null,
+  "staleAfter": null,
+  "supersedes": [],
+  "supersededBy": null,
+  "conflictGroup": null,
+  "redaction": {
+    "status": "none",
+    "reason": null,
+    "redactedAt": null,
+    "redactedBy": null,
+    "originalHash": null
+  }
+}
