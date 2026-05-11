@@ -1,111 +1,82 @@
 # AiPlus Agent Memory
 
-[English README](README.md)
+[English](README.md)
 
-## 问题所在
+## The Problem
 
-周一早上，你花了二十分钟教 agent 项目的命名规范。到周三 agent 已经忘了该用 camelCase 还是 snake_case。你加了 memory 文件帮忙，又担心里面不小心粘贴了上周的私人偏好或 API key 片段。你希望 agent 记住，但不能冒险把 secret 泄漏到 public repository。
+你的 agent 在会话之间患有彻底的失忆症（amnesia）。周一你教完命名规范，
+周三它已经忘了该用 camelCase 还是 snake_case。同样的偏好你一周要重复教
+三遍。
 
-## 它能做什么
+往记忆里加东西让人不安。如果某条记录泄露了你随口提过的私人偏好怎么办？
+如果上周的 API key 片段还留在某条被存储的 transcript 里怎么办？你希望
+agent 记得，但你不能冒险让秘密出现在共享仓库中。
 
-AiPlus Agent Memory 把项目规范以 JSONL 记录形式存在 `.aiplus/memory/` 下。每条记录包含记忆项、角色身份或 skill candidate 提案。任何记录写入前，十二条自动 redaction 模式剥除敏感串：
+## The Solution
 
-- Password 和 API key
-- JWT token 和 auth header
-- Raw transcript 和 provider request/response body
-- 私人路径和个人标识符
+AiPlus Agent Memory 把项目规范以 JSONL 记录形式存放在
+`.aiplus/memory/` 下。每条记录都隶属于当前项目，不会离开本机。
 
-`memory doctor` 命令运行自动化健康检查：stale records、条目间 conflicts、schema violations 和 orphan files。被拒绝或已忘记的记录留在 store 中供审计，但默认对 agent 上下文隐藏。
+任何记录写入前，十二条自动脱敏（redaction）规则会先剥除内容中的敏感
+字符串：
 
-角色身份定义 agent 该如何表现：Advisor 负责策略，CEO 负责规划，Reviewer 负责审阅，Builder 负责实现。用自然语言命令切换角色。
+- 密码与 API key
+- JWT token 与 authorization header
+- 原始 transcript 与 provider 的请求/响应体
+- 私人文件路径与个人标识符
 
-## 安装
+`memory doctor` 命令会对存储运行自检：过期记录、冲突条目、schema
+违规与孤儿文件。被拒绝或已遗忘的记录仍留在存储中供审计，但默认对
+agent 的上下文隐藏。
 
-已安装 AiPlus 时，memory 自动启用：
+没有网络请求，没有云端同步，没有向量数据库，也没有上传。
+
+## Quick Start
+
+安装项目 agent 时，AiPlus 会自动启用 memory：
 
 ```bash
 cd MyProject
-aiplus install codex        # 或: claude-code, opencode, all
+aiplus install opencode     # 或: codex, claude-code
 aiplus memory status
 ```
 
-或使用 standalone schema 和模板：
+`aiplus memory status` 会输出存储是否已初始化、活跃记录数量，以及
+`memory doctor` 是否发现问题。
 
-```bash
-git clone https://github.com/izhiwen/aiplus-agent-memory.git
-cd aiplus-agent-memory
-```
+## What's Inside
 
-## Runtime 支持
+关键目录与文件：
 
-Memory 支持所有三种 agent。为对应 runtime 安装 AiPlus：
+- `core/schemas/` — memory record、identity、skill candidate、
+  audit event、role identity、memory review 的 JSON schema
+- `core/templates/` — 记忆记录模板与角色身份定义（`advisor`、`ceo`、
+  `reviewer`、`builder`）
+- `core/docs/` — 记忆模型、协议、脱敏策略、角色身份参考、skill
+  candidate 生命周期、安全边界与 QA 检查清单
+- `adapters/codex/` — Codex 的记忆与身份命令 skill
+- `adapters/claude-code/` — Claude Code 的记忆集成
+- `adapters/opencode/` — OpenCode 的记忆 prompt 与 agent 配置
+- `examples/` — 安全与被拦截的记忆记录示例，以及已拒绝和已接受的
+  skill candidate
+- `tests/fixtures/` — 验证固件
 
-```bash
-aiplus install codex        # Codex
-aiplus install claude-code  # Claude Code
-aiplus install opencode     # OpenCode
-```
+## Safety Boundaries
 
-每个 runtime 获得项目级 adapter 文件，在 agent session 中启用自然语言记忆命令。
+AiPlus Agent Memory 不会：
 
-## 工作原理
-
-agent session 中的自然语言命令映射到记忆操作：
-
-```text
-记住函数要用 camelCase                → aiplus memory add
-你记得这个项目哪些规范？              → aiplus memory status
-切换到 advisor 模式                   → aiplus identity context --role advisor
-忘掉那个关于制表符的规则              → aiplus memory forget <id>
-```
-
-## 仓库结构
-
-- `core/schemas/` — memory-record、identity、skill-candidate、audit-event、role-identity 的 JSON schema
-- `core/templates/` — 记忆记录模板和角色身份定义（advisor、ceo、reviewer、builder）
-- `core/docs/` — 记忆模型、协议、redaction 策略、角色身份、skill candidate 生命周期、安全边界
-- `adapters/codex/` — Codex 记忆和身份命令 skills
-- `adapters/claude-code/` — Claude Code 记忆集成和命令
-- `adapters/opencode/` — OpenCode 记忆 prompts 和 agents
-- `examples/` — Safe 和 blocked 记忆记录示例，展示 redaction 效果
-- `tests/` — 测试 fixtures 和验证用例
-
-## 命令
-
-```bash
-# 记忆管理
-aiplus memory init --project              # 初始化项目记忆 store
-aiplus memory status                      # 显示记录数和健康状态
-aiplus memory doctor                      # 运行自动化健康检查
-aiplus memory context --runtime codex     # 为 agent 构建上下文包
-aiplus memory add --scope project         # 添加项目级记忆
-aiplus memory search "naming"             # 搜索记忆记录
-aiplus memory forget <id>                 # 从上下文移除记录
-
-# 身份管理
-aiplus identity init --project            # 初始化角色身份
-aiplus identity context --role advisor    # 加载 advisor 上下文
-aiplus identity context --role ceo        # 加载 CEO 上下文
-
-# Skill candidates
-aiplus skill-candidate status             # 显示 proposed skills
-```
-
-## 安全
-
-AiPlus Agent Memory 不：
 - 上传记忆数据或 transcript 到任何服务
-- 实现 cloud sync 或 vector database
+- 实现云端同步或向量数据库
 - 未经显式批准自动从 transcript 学习
-- 自动批准 skills（candidates 需要显式接受）
+- 自动批准 skill（candidate 需要显式接受）
 - 在记忆记录中存储 secrets（redaction 在写入前阻止）
-- 在项目间共享数据（每个项目有隔离的记忆）
+- 在项目间共享数据（每个项目拥有隔离的记忆）
 
-## 更多信息
+## More Info
 
-见 [主 AiPlus 仓库](https://github.com/izhiwen/aiplus) 了解完整平台。
-
-当前缺口和计划工作：[v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)。
+- 主平台：[aiplus](https://github.com/izhiwen/aiplus)
+- 当前缺口与计划工作：
+  [v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 
