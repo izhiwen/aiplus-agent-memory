@@ -1,5 +1,5 @@
 # AiPlus Agent Memory
-[![CI](https://github.com/izhiwen/aiplus-agent-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/aiplus-agent-memory/actions/workflows/ci.yml)
+[![CI](https://github.com/izhiwen/AiPlus-Agent-Memory/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/AiPlus-Agent-Memory/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 [中文 README](README.zh-CN.md)
@@ -42,10 +42,11 @@ No network call. No cloud sync. No vector database. No upload. Ever.
 
 ## Quick start
 
-AiPlus installs memory automatically when you set up a project agent:
+Memory ships with the AiPlus bundle. If you already have AiPlus installed:
 
 ```bash
 cd MyProject
+aiplus add agent-memory       # add module (no-op if already bundled)
 aiplus install codex          # or: claude-code, opencode, all
 aiplus memory status
 ```
@@ -79,11 +80,24 @@ AiPlus Agent Memory does not:
 - store secrets in records (redaction blocks them before writing)
 - share data between projects (each project's memory is isolated)
 
+## Contributing
+
+We welcome contributions that stay within the plugin's scope (local
+project-scoped agent memory with strict redaction, not a generic vector
+database or cloud-synced memory).
+
+1. **Open an issue first** for anything larger than a typo fix.
+2. **Add a redaction fixture** for every new redaction pattern under
+   `tests/fixtures/` so the rule is covered before the code lands.
+3. **Adapter parity** — if you change CLI surface, update all three
+   adapters (`adapters/codex/`, `adapters/claude-code/`, `adapters/opencode/`).
+4. **Run `aiplus memory doctor`** after schema changes to validate the store.
+
 ## More
 
-- Main platform: [aiplus](https://github.com/izhiwen/aiplus)
+- Main platform: [AiPlus](https://github.com/izhiwen/AiPlus)
 - Tracked work before next release:
-  [v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+  [v0.5.2 known gaps](https://github.com/izhiwen/AiPlus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 

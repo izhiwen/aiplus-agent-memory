@@ -1,5 +1,5 @@
 # AiPlus Agent Memory
-[![CI](https://github.com/izhiwen/aiplus-agent-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/aiplus-agent-memory/actions/workflows/ci.yml)
+[![CI](https://github.com/izhiwen/AiPlus-Agent-Memory/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/AiPlus-Agent-Memory/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 [English README](README.md)
@@ -23,10 +23,11 @@ AiPlus Agent Memory 是一个**项目本地的 JSONL memory 存储**，让 agent
 
 ## 入门
 
-设置项目 agent 时 AiPlus 自动装上 memory：
+Memory 是 AiPlus bundle 自带模块。如果你已装好 AiPlus：
 
 ```bash
 cd MyProject
+aiplus add agent-memory       # 加模块（已 bundle 则 no-op）
 aiplus install codex          # 或：claude-code, opencode, all
 aiplus memory status
 ```
@@ -55,11 +56,20 @@ AiPlus Agent Memory **不会**：
 - 在记录里存 secret（redaction 在写入前 block）
 - 在项目间共享数据（每个项目 memory 独立）
 
+## 贡献
+
+欢迎在插件 scope 内（**项目本地 + 严格 redaction 的 agent memory**，不是通用 vector DB 或云同步 memory）的贡献：
+
+1. **先开 issue** —— 比 typo 大的改动都先开 issue。
+2. **每条新 redaction 规则附 fixture** —— 在 `tests/fixtures/` 加测试用例，先有测试再有代码。
+3. **保持 adapter 对齐** —— 改 CLI 表面同步更新三个 adapter (`adapters/codex/`, `adapters/claude-code/`, `adapters/opencode/`)。
+4. **改完 schema 跑 `aiplus memory doctor`** 验证存储。
+
 ## 更多
 
-- 主平台：[aiplus](https://github.com/izhiwen/aiplus)
+- 主平台：[AiPlus](https://github.com/izhiwen/AiPlus)
 - 下次发布前要跟进的事：
-  [v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+  [v0.5.2 known gaps](https://github.com/izhiwen/AiPlus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 
