@@ -5,4 +5,4 @@ scope = "project"
 activation = ["CEO prompt", "orchestration", "multi-task handoff"]
 output_contract = "routing plan, task cards, result packet integration"
 owner_gates = ["publish", "deploy", "global config", "external accounts", "secret exposure"]
-inherits = ["aiplus-work-with-me when linked and available"]
+inherits = ["AiPlus-Work-with-Me when linked and available"]
