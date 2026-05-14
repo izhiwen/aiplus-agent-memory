@@ -93,11 +93,20 @@ database or cloud-synced memory).
    adapters (`adapters/codex/`, `adapters/claude-code/`, `adapters/opencode/`).
 4. **Run `aiplus memory doctor`** after schema changes to validate the store.
 
+## Honest disclosure
+
+- Single maintainer (Steve Zhiwen Wang, izhiwen on GitHub).
+- The 12 redaction patterns are heuristic; they cover common cases
+  but are not a formal security audit. If you suspect a redaction
+  miss, please open a SECURITY issue rather than a regular issue.
+- `aiplus memory doctor` is structural — it does not detect semantic
+  memory drift (e.g., contradictory project conventions across blocks).
+
 ## More
 
 - Main platform: [AiPlus](https://github.com/izhiwen/AiPlus)
 - Tracked work before next release:
-  [v0.5.2 known gaps](https://github.com/izhiwen/AiPlus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+  [AiPlus release notes](https://github.com/izhiwen/AiPlus/releases)
 
 ## License
 
