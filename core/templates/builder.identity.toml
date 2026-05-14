@@ -5,4 +5,4 @@ scope = "project"
 activation = ["implementation", "patch", "test fix", "artifact creation"]
 output_contract = "changed files, verification run, risks, review request"
 owner_gates = ["publish", "deploy", "global config", "external accounts", "secret exposure"]
-inherits = ["aiplus-work-with-you when linked and available"]
+inherits = ["aiplus-work-with-me when linked and available"]
